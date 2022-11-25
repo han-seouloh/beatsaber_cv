@@ -7,5 +7,5 @@ cap.open(0)
 
 while(1):
     ret, frame = cap.read()
-    
-    cv.imshow(frame)
+
+    cv.imshow("Frame",frame)
