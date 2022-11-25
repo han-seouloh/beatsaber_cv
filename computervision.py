@@ -5,7 +5,12 @@ cap = cv.VideoCapture()
 
 cap.open(0)
 
-while(1):
-    ret, frame = cap.read()
+if not cap.isOpened():
+    print("Could not access camera")
+    exit()
 
-    cv.imshow("Frame",frame)
+while(cap.isOpene):
+    ret, frame = cap.read()
+    
+    if ret:
+        cv.imshow("Frame",frame)
