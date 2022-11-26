@@ -1,6 +1,5 @@
 import numpy as np
 import cv2 as cv
-import json
 
 from jsonparser import jsonParse
 
@@ -106,18 +105,40 @@ class Detector:
         # Centroids of each blob
         centroids = out[3]
 
+        areas = []
+
         # Loop through each blob (blob 0 is always the background)
         for i in range(1,num_labels):
-
             
-            width  = stats[i,cv.CC_STAT_WIDTH]
-            height = stats[i,cv.CC_STAT_HEIGHT]
+            #width  = stats[i,cv.CC_STAT_WIDTH]
+            #height = stats[i,cv.CC_STAT_HEIGHT]
             area   = stats[i,cv.CC_STAT_AREA]
-
-            (cx,cy) = centroids[i].astype(int)
             
-            cv.circle(InputArray, (cx,cy) , 5,(0,220,10),-1)
+            areas.append(area)
+
         
+        if len(areas) < 2: 
+            return InputArray
+        
+
+        
+
+        idxs = []
+
+        idxs.append(areas.index(max(areas))+1)
+        areas.pop(idxs[0] - 1)
+        idxs.append(areas.index(max(areas)) + 1)
+
+        idxs
+
+        for idx in idxs:
+            (cx,cy) = centroids[idx].astype(int)
+            cv.circle(InputArray, (cx,cy) , 5,(0,220,10), 2)
+
+
+        cv.imshow("blobs", closed)
+
+            
         return InputArray
                      
     
