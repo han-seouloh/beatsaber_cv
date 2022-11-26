@@ -31,15 +31,33 @@ class Detector:
         self.HSVmax = config_dict["HSVmax"]
 
         # Set the parameter values to each filter
-        self.gaussian = config_dict["filters"][0]
-        self.opening = config_dict["filters"][1]
-        self.closing = config_dict["filters"][2]
-        
+        for f in config_dict["filters"]:
+            if f["name"] == "gaussian":
+                gaussian = {}
+                gaussian["size"] = (f["size"],f["size"])
+                gaussian["sd"] = f["iters"]
+
+                self.gaussian = gaussian
+            
+            elif f["name"] == "opening":
+                opening = {}
+                opening["size"] = (f["size"],f["size"])
+                opening["iters"] = f["iters"]
+
+                self.opening = opening      
+
+            elif f["name"] == "closing":
+                closing = {}
+                closing["size"] = (f["size"],f["size"])
+                closing["iters"] = f["iters"]
+
+                self.closing = closing       
+
     def detect(self, InputArray):
 
         # Gaussian blur: Noise reduction
         blur = cv.GaussianBlur(InputArray,
-                              (self.gaussian["size"],self.gaussian["size"]),
+                              self.gaussian["size"],
                                2)    # convolves a n x n gaussian kernel with the Input Array
 
         # BGR to HSV
@@ -48,23 +66,30 @@ class Detector:
         # HSV color based segmentation
         weak_segmentaiton = cv.inRange(hsv, self.HSVmin, self.HSVmax)
 
-        # Structuring element aquisition: sliding window for morphological operations
-        elem = cv.getStructuringElement(cv.MORPH_RECT,
-                                        (self.closing["size"],(self.closing["size"])),
+        # Structuring element aquisition: sliding window for morphological opening
+        elem_open = cv.getStructuringElement(cv.MORPH_RECT,
+                                        self.opening["size"],
                                         (-1,-1))
 
         # Morphological opening: Noise reduction
         shape = weak_segmentaiton.shape             # Shape of the previous segmentation frame: n x m x c
         eroded = np.zeros(shape , dtype= "uint8")   # Placeholder for result of erosion
         opened = np.zeros(shape, dtype= "uint8")    # Placeholder for result of opening
-        cv.erode(weak_segmentaiton, elem, eroded, (-1,-1), self.opening["iters"])
-        cv.dilate(eroded, elem, opened, (-1,-1), self.opening["iters"])
+        cv.erode(weak_segmentaiton, elem_open, eroded, (-1,-1), self.opening["iters"])
+        cv.dilate(eroded, elem_open, opened, (-1,-1), self.opening["iters"])
+
+        # Structuring element aquisition: sliding window for morphological closing
+        elem_close = cv.getStructuringElement(cv.MORPH_RECT,
+                                            self.closing["size"],
+                                            (-1,-1))
+
+
 
         # Morphological closing: Close holes
         dilated = np.zeros(shape, dtype= "uint8")  # Placeholder for result of dilation
         closed  = np.zeros(shape, dtype= "uint8")  # Placeholder for result of closing
-        cv.dilate(opened, elem, dilated, (-1,-1), self.closing["iters"])
-        cv.erode(dilated, elem, closed, (-1,-1), self.closing["iters"])
+        cv.dilate(opened, elem_close, dilated, (-1,-1), self.closing["iters"])
+        cv.erode(dilated, elem_close, closed, (-1,-1), self.closing["iters"])
 
         # Geometry calculations
         out = cv.connectedComponentsWithStatsWithAlgorithm(closed, 8, cv.CV_32S, cv.CCL_DEFAULT)
