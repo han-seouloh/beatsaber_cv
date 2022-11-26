@@ -7,15 +7,18 @@
             "filters" : [
                 {
                     "name":"gaussian",
-                    "size":"5,5"
+                    "size":"5",
+                    "iters": "2"
                 },
                 {
                     "name":"opening",
-                    "size":"5,5"
+                    "size":"5",
+                    "iters": "2"
                 },
                 {
                     "name":"closing",
-                    "size":"5,5"
+                    "size":"5",
+                    "iters": "2"
                 }
         
             ]
@@ -28,15 +31,18 @@
             "filters" : [
                 {
                     "name":"gaussian",
-                    "size":"5,5"
+                    "size":"5",
+                    "iters": "2"
                 },
                 {
                     "name":"opening",
-                    "size":"5,5"
+                    "size":"5",
+                    "iters": "2"
                 },
                 {
                     "name":"closing",
-                    "size":"5,5"
+                    "size":"5",
+                    "iters": "2"
                 }
         
             ]
