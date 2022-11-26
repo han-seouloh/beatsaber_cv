@@ -1,0 +1,45 @@
+{
+    "detection": [
+        {
+            "id":"1",
+            "HSVmin": "0,100,100",
+            "HSVmax": "10,255,255",
+            "filters" : [
+                {
+                    "name":"gaussian",
+                    "size":"5,5"
+                },
+                {
+                    "name":"opening",
+                    "size":"5,5"
+                },
+                {
+                    "name":"closing",
+                    "size":"5,5"
+                }
+        
+            ]
+
+        },
+        {
+            "id":"2",
+            "HSVmin": "50,100,100",
+            "HSVmax": "50,255,255",
+            "filters" : [
+                {
+                    "name":"gaussian",
+                    "size":"5,5"
+                },
+                {
+                    "name":"opening",
+                    "size":"5,5"
+                },
+                {
+                    "name":"closing",
+                    "size":"5,5"
+                }
+        
+            ]
+        }
+    ]
+}

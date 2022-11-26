@@ -54,8 +54,7 @@ class Detector:
         cv.dilate(opened, elem, dilated, (-1,-1), 2)
         cv.erode(dilated, elem, closed, (-1,-1), 2)
         
-        # DEBUG
-        return closed
+        
 
 
 
