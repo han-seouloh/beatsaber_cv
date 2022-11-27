@@ -1,50 +1,47 @@
 {
     "detection": [
         {
-            "id":"1",
-            "HSVmin": "10,100,100",
-            "HSVmax": "20,255,255",
-            "filters" : [
+            "id": "1",
+            "HSVmin": "16,233,41",
+            "HSVmax": "24,255,255",
+            "filters": [
                 {
-                    "name":"gaussian",
-                    "size":"5",
+                    "name": "gaussian",
+                    "size": "5",
                     "iters": "2"
                 },
                 {
-                    "name":"opening",
-                    "size":"5",
+                    "name": "opening",
+                    "size": "5",
                     "iters": "2"
                 },
                 {
-                    "name":"closing",
-                    "size":"5",
+                    "name": "closing",
+                    "size": "5",
                     "iters": "2"
                 }
-        
             ]
-
         },
         {
-            "id":"2",
+            "id": "2",
             "HSVmin": "50,100,100",
             "HSVmax": "50,255,255",
-            "filters" : [
+            "filters": [
                 {
-                    "name":"gaussian",
-                    "size":"5",
+                    "name": "gaussian",
+                    "size": "5",
                     "iters": "2"
                 },
                 {
-                    "name":"opening",
-                    "size":"5",
+                    "name": "opening",
+                    "size": "5",
                     "iters": "2"
                 },
                 {
-                    "name":"closing",
-                    "size":"5",
+                    "name": "closing",
+                    "size": "5",
                     "iters": "2"
                 }
-        
             ]
         }
     ]

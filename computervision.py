@@ -135,7 +135,7 @@ class Detector:
 
         angle = np.arctan2(d_cx, d_cy)
 
-        print(angle*180/np.pi)
+        #print(angle*180/np.pi)
 
         cv.line(InputArray,candidates[0]["centroid"],candidates[1]["centroid"],(0,10,220),2)
 
