@@ -96,7 +96,7 @@ class Detector:
         # Number of blobs found
         num_labels = out[0]
 
-        # Frame with labeld blobs from 0-N
+        # Frame with labeled blobs from 0-N
         labels = out[1]
 
         # Gemoetrical data of each blob
@@ -105,36 +105,39 @@ class Detector:
         # Centroids of each blob
         centroids = out[3]
 
-        areas = []
-
+        
+        candidates = []
         # Loop through each blob (blob 0 is always the background)
         for i in range(1,num_labels):
-            
-            #width  = stats[i,cv.CC_STAT_WIDTH]
-            #height = stats[i,cv.CC_STAT_HEIGHT]
-            area   = stats[i,cv.CC_STAT_AREA]
-            
-            areas.append(area)
+            stats_dict = {}
 
-        
-        if len(areas) < 2: 
+            # unpack the area stat of blob i
+            area  = stats[i,cv.CC_STAT_AREA]
+
+            # select blobs with ares between the range
+            if (area > 50 and area <10000):
+                stats_dict["area"] = area
+                stats_dict["centroid"] = centroids[i].astype(int)
+
+                candidates.append(stats_dict)
+
+        if len(candidates) < 2:
             return InputArray
-        
 
-        
+        candidates = sorted(candidates, key= lambda d: d["area"], reverse=True)
 
-        idxs = []
 
-        idxs.append(areas.index(max(areas))+1)
-        areas.pop(idxs[0] - 1)
-        idxs.append(areas.index(max(areas)) + 1)
+        for c in candidates[:2]:
+            cv.circle(InputArray, c["centroid"] , 5,(0,220,10), 2)
 
-        idxs
+        d_cx = candidates[0]["centroid"][0] - candidates[1]["centroid"][0] 
+        d_cy = candidates[0]["centroid"][1] - candidates[1]["centroid"][1] 
 
-        for idx in idxs:
-            (cx,cy) = centroids[idx].astype(int)
-            cv.circle(InputArray, (cx,cy) , 5,(0,220,10), 2)
+        angle = np.arctan2(d_cx, d_cy)
 
+        print(angle*180/np.pi)
+
+        cv.line(InputArray,candidates[0]["centroid"],candidates[1]["centroid"],(0,10,220),2)
 
         cv.imshow("blobs", closed)
 
