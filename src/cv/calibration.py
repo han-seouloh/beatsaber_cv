@@ -1,7 +1,8 @@
 import json
 import cv2 as cv
 import math
-from ..computervision import Camera
+
+from computervision import Camera
 
 def nothing(x):
     pass
@@ -23,7 +24,7 @@ if __name__ == "__main__":
 
 
     # Read the existing JSON configuration file
-    with open('../../resources/cv.config.json', 'r') as f:
+    with open(r'../../test.txt', 'r') as f:
         config = json.load(f)
 
     # Create tuple placeholders for the HSV ranges
