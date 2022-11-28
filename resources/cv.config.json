@@ -2,8 +2,8 @@
     "detection": [
         {
             "id": "1",
-            "HSVmin": "16,233,41",
-            "HSVmax": "24,255,255",
+            "HSVmin": "145,80,100",
+            "HSVmax": "162,255,255",
             "filters": [
                 {
                     "name": "gaussian",

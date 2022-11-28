@@ -1,7 +1,7 @@
 import json
 import cv2 as cv
 import math
-from computervision import Camera
+from ..computervision import Camera
 
 def nothing(x):
     pass

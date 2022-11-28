@@ -1,7 +1,8 @@
 import numpy as np
 import cv2 as cv
 
-from jsonparser import jsonParse
+
+from utils.jsonparser import jsonParse
 
 class Camera (cv.VideoCapture):
     """Camera handler class"""
