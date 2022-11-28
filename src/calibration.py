@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
 
     # Read the existing JSON configuration file
-    with open('cv.config.json', 'r') as f:
+    with open('../../resources/cv.config.json', 'r') as f:
         config = json.load(f)
 
     # Create tuple placeholders for the HSV ranges

@@ -1,7 +1,6 @@
 import numpy as np
 import cv2 as cv
 
-
 from utils.jsonparser import jsonParse
 
 class Camera (cv.VideoCapture):
@@ -149,7 +148,7 @@ class Detector:
 # Debug for testing the cv pipeline
 if __name__ == "__main__":
     
-    configs = jsonParse('cv.config.json')
+    configs = jsonParse("../resources/cv.config.json")
 
     cap = Camera()
     det = Detector(configs[0])
