@@ -2,7 +2,7 @@
     "detection": [
         {
             "id": "1",
-            "HSVmin": "0,0,0",
+            "HSVmin": "149,0,0",
             "HSVmax": "180,255,255",
             "filters": [
                 {
@@ -12,12 +12,12 @@
                 },
                 {
                     "name": "opening",
-                    "size": "5",
+                    "size": "2",
                     "iters": "1"
                 },
                 {
                     "name": "closing",
-                    "size": "5",
+                    "size": "1",
                     "iters": "1"
                 }
             ]

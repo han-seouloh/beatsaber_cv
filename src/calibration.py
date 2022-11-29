@@ -96,6 +96,10 @@ if __name__ == "__main__":
             cv.imshow(hsv_win, bin)
             cv.imshow(morph_win, closed)
 
+            # Masking
+            masked = cv.bitwise_and(frame, frame, mask = closed)
+            cv.imshow("Segmentation result", masked)
+
     
     # Convert tuple to string
     separator = ','
