@@ -11,6 +11,7 @@ if __name__ == "__main__":
 
     cap = Camera()
 
+    # Window and trackbar creation for parametrizing segmentation
     hsv_win = "HSV Calibration"
     cv.namedWindow(hsv_win)
     cv.createTrackbar("Hue min",hsv_win, 0, 360, nothing)
@@ -20,14 +21,13 @@ if __name__ == "__main__":
     cv.createTrackbar("Val min",hsv_win, 0,100, nothing)
     cv.createTrackbar("Val max",hsv_win, 100,100, nothing)
 
+    # Window and trackbar creation for parametrizing morphological operations
     morph_win = "Morphological operations"
     cv.namedWindow(morph_win)
-    cv.createTrackbar("Hue min",hsv_win, 0, 360, nothing)
-    cv.createTrackbar("Hue max",hsv_win, 360,360, nothing)
-    cv.createTrackbar("Sat min",hsv_win, 0,100, nothing)
-    cv.createTrackbar("Sat max",hsv_win, 100,100, nothing)
-    cv.createTrackbar("Val min",hsv_win, 0,100, nothing)
-    cv.createTrackbar("Val max",hsv_win, 100,100, nothing)
+    cv.createTrackbar("Opening s.e. size",morph_win, 0, 10, nothing)
+    cv.createTrackbar("Opening iterations",morph_win, 0, 10, nothing)
+    cv.createTrackbar("Closing s.e. size",morph_win, 0, 10, nothing)
+    cv.createTrackbar("Closing iterations",morph_win, 0, 10, nothing)
 
     config_path = 'resources/cv.config.json'
     
