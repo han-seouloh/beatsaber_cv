@@ -1,8 +1,6 @@
 import numpy as np
 import cv2 as cv
 
-from utils.jsonparser import jsonParse
-
 class Camera (cv.VideoCapture):
     """Camera handler class"""
 
@@ -148,6 +146,10 @@ class Detector:
 # Debug for testing the cv pipeline
 if __name__ == "__main__":
     
+    print("Running computer vision test ...")
+
+    from utils.jsonparser import jsonParse
+
     configs = jsonParse("../resources/cv.config.json")
 
     cap = Camera()

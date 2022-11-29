@@ -2,7 +2,7 @@ import json
 import cv2 as cv
 import math
 
-from computervision import Camera
+from cv.computervision import Camera
 
 def nothing(x):
     pass
@@ -21,11 +21,20 @@ if __name__ == "__main__":
     cv.createTrackbar("Val max",hsv_win, 100,100, nothing)
 
     morph_win = "Morphological operations"
+    cv.namedWindow(morph_win)
+    cv.createTrackbar("Hue min",hsv_win, 0, 360, nothing)
+    cv.createTrackbar("Hue max",hsv_win, 360,360, nothing)
+    cv.createTrackbar("Sat min",hsv_win, 0,100, nothing)
+    cv.createTrackbar("Sat max",hsv_win, 100,100, nothing)
+    cv.createTrackbar("Val min",hsv_win, 0,100, nothing)
+    cv.createTrackbar("Val max",hsv_win, 100,100, nothing)
 
-
+    config_path = 'resources/cv.config.json'
+    
     # Read the existing JSON configuration file
-    with open(r'../../test.txt', 'r') as f:
+    with open(config_path, 'r') as f:
         config = json.load(f)
+        f.close()
 
     # Create tuple placeholders for the HSV ranges
     hsv_min = tuple
@@ -67,9 +76,9 @@ if __name__ == "__main__":
     config["detection"][0]["HSVmax"] = hsv_max_val
     
     # Write the calibration data to the config.json file
-    with open("cv.config.json", 'w') as f:
-        
+    with open(config_path, 'w') as f:
         json.dump(config, f, indent = 4)
+        f.close()
 
 
             
