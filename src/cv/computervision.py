@@ -148,9 +148,9 @@ if __name__ == "__main__":
     
     print("Running computer vision test ...")
 
-    from utils.jsonparser import jsonParse
+    from src.utils.jsonparser import jsonParse
 
-    configs = jsonParse("../resources/cv.config.json")
+    configs = jsonParse("resources/cv.config.json")
 
     cap = Camera()
     det = Detector(configs[0])
