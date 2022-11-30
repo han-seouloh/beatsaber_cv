@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv
+import sys
 
 class Camera (cv.VideoCapture):
     """Camera handler class"""
@@ -13,9 +14,10 @@ class Camera (cv.VideoCapture):
         if not self.isOpened():
 
             try:
-                raise AssertionError("Camera was not found in the given index")
-            except AssertionError as e:
+                raise Exception("Camera was not found in the given index")
+            except Exception as e:
                 print("Assertion error: ", e)
+                sys.exit(1)
 
                 
 class Detector:
