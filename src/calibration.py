@@ -9,7 +9,7 @@ def nothing(x):
 
 if __name__ == "__main__":
 
-    cap = Camera()
+    cap = Camera(1)
 
     # Window and trackbar creation for parametrizing segmentation
     hsv_win = "HSV Calibration"

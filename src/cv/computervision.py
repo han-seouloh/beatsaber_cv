@@ -122,7 +122,7 @@ class Detector:
                 candidates.append(stats_dict)
 
         if len(candidates) < 2:
-            return InputArray
+            return InputArray, (0,0), (0,0)
 
         candidates = sorted(candidates, key= lambda d: d["area"], reverse=True)
 
@@ -141,8 +141,10 @@ class Detector:
 
         cv.imshow("blobs", closed)
 
+        c1 = candidates[0]['centroid']
+        c2 = candidates[1]['centroid']
             
-        return InputArray
+        return InputArray, c1, c2
                      
     
 # Debug for testing the cv pipeline
