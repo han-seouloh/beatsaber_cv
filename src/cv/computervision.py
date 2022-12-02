@@ -32,8 +32,9 @@ class Camera (cv.VideoCapture):
     def update(self):
         while True:
             
+
             if self.stopped:
-                return
+                break
         
             # If the thread has not been stopped, read the next frame
             self.grabbed,self.frame = self.read()
@@ -185,16 +186,17 @@ if __name__ == "__main__":
 
     configs = jsonParse("resources/cv.config.json")
 
-    cap = Camera(2).start()
+    cap = Camera(0).start()
     det = Detector(configs[0])
 
     # Wait 1 ms until the "esc" key is pressed (ASCII "esc" = 27)
-    while (True):
-        if(cv.waitKey(1) == 27):
-            cap.stop()
-            exit
-            
+    while (cv.waitKey(1) != 27):
+
         debug,p1,p2 = det.detect(cap.getFrame())
 
         cv.imshow("Frame", debug)
+    
+    cap.stop()
+    cv.destroyAllWindows()
+
 

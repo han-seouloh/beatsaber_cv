@@ -2,7 +2,7 @@
     "detection": [
         {
             "id": "1",
-            "HSVmin": "160,143,182",
+            "HSVmin": "117,57,210",
             "HSVmax": "180,255,255",
             "filters": [
                 {

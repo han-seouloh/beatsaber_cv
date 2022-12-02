@@ -25,17 +25,21 @@ def map_cv2ur(cv_centroid, frame_shape, factor = 10):
 def update():
   frame = cap.getFrame()
 
-  #cv.waitKey(1)
+  cv.waitKey(1)
   debug, pos1, pos2 = det.detect(frame)
-  #cv.imshow("Frame", debug)
+  cv.imshow("Frame", debug)
   
   if pos1 is not None:
     mod3d.worldcube.position = map_cv2ur(pos1, frame.shape, 10)
 
-  
+# Input to quit the game
+def input(key):
+  if key == "escape":
+    cap.stop()
+    quit()
 
 # run game
 mod3d.app.run()
 
-cap.stop()
+
 cv.destroyAllWindows()

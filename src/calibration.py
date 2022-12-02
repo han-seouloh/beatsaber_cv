@@ -3,13 +3,17 @@ import cv2 as cv
 import math
 
 from cv.computervision import Camera
+from utils import parser
+
 
 def nothing(x):
     pass
 
 if __name__ == "__main__":
 
-    cap = Camera(1)
+    args = parser.init_argparser()
+
+    cap = Camera(args.camera).start()
 
     # Window and trackbar creation for parametrizing segmentation
     hsv_win = "HSV Calibration"
@@ -74,31 +78,31 @@ if __name__ == "__main__":
         closing_size = (closing_sturct_elem, closing_sturct_elem)
 
         # Read a new video frame
-        ret, frame = cap.read()
+        frame = cap.getFrame()
 
-        if ret:
 
-            # Segment the image with the given HSV ranges
-            hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-            bin = cv.inRange(hsv, hsv_min, hsv_max)
 
-            # Morphological operations
-            opening_se = cv.getStructuringElement(cv.MORPH_RECT, opening_size, (-1,-1))
-            eroded = cv.erode(bin, opening_se, iterations = opening_iters)
-            opened = cv.dilate(eroded, opening_se, iterations = opening_iters)
+        # Segment the image with the given HSV ranges
+        hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+        bin = cv.inRange(hsv, hsv_min, hsv_max)
 
-            closing_se = cv.getStructuringElement(cv.MORPH_RECT, closing_size, (-1,-1))
-            dilated = cv.dilate(opened, closing_se, iterations = closing_iters)
-            closed = cv.erode(dilated, closing_se, iterations = closing_iters)
-            
-            # Display the result of the callibration
+        # Morphological operations
+        opening_se = cv.getStructuringElement(cv.MORPH_RECT, opening_size, (-1,-1))
+        eroded = cv.erode(bin, opening_se, iterations = opening_iters)
+        opened = cv.dilate(eroded, opening_se, iterations = opening_iters)
 
-            cv.imshow(hsv_win, bin)
-            cv.imshow(morph_win, closed)
+        closing_se = cv.getStructuringElement(cv.MORPH_RECT, closing_size, (-1,-1))
+        dilated = cv.dilate(opened, closing_se, iterations = closing_iters)
+        closed = cv.erode(dilated, closing_se, iterations = closing_iters)
+        
+        # Display the result of the callibration
 
-            # Masking
-            masked = cv.bitwise_and(frame, frame, mask = closed)
-            cv.imshow("Segmentation result", masked)
+        cv.imshow(hsv_win, bin)
+        cv.imshow(morph_win, closed)
+
+        # Masking
+        masked = cv.bitwise_and(frame, frame, mask = closed)
+        cv.imshow("Segmentation result", masked)
 
     
     # Convert tuple to string
@@ -119,6 +123,9 @@ if __name__ == "__main__":
     with open(config_path, 'w') as f:
         json.dump(config, f, indent = 4)
         f.close()
+
+    cap.stop()
+    cv.destroyAllWindows()
 
 
             
