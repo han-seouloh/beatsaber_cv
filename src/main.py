@@ -7,7 +7,7 @@ args = parser.init_argparser()
 
 configs = jsonParse("resources/cv.config.json")
 
-cap = Camera(args.camera)
+cap = Camera(args.camera).start()
 det = Detector(configs[0])
 
 # map opencv coordinates to ursina coordinates
@@ -23,12 +23,11 @@ def map_cv2ur(cv_centroid, frame_shape, factor = 10):
 
 # update
 def update():
-  _, frame = cap.read()
+  frame = cap.getFrame()
 
-  if _:
-    cv.waitKey(1)
-    debug, pos1, pos2 = det.detect(frame)
-    cv.imshow("Frame", debug)
+  #cv.waitKey(1)
+  debug, pos1, pos2 = det.detect(frame)
+  #cv.imshow("Frame", debug)
   
   if pos1 is not None:
     mod3d.worldcube.position = map_cv2ur(pos1, frame.shape, 10)
@@ -37,3 +36,6 @@ def update():
 
 # run game
 mod3d.app.run()
+
+cap.stop()
+cv.destroyAllWindows()

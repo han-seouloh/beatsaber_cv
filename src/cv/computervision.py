@@ -1,3 +1,4 @@
+from threading import Thread
 import numpy as np
 import cv2 as cv
 import sys
@@ -18,6 +19,34 @@ class Camera (cv.VideoCapture):
             except Exception as e:
                 print("Assertion error: ", e)
                 sys.exit(1)
+
+        self.grabbed, self.frame = self.read()
+        
+        self.stopped = False
+    
+    def start(self):
+        # Start thread to read frame from the video stream
+        Thread(target = self.update, args=()).start()
+        return self
+    
+    def update(self):
+        while True:
+            
+            if self.stopped:
+                return
+        
+            # If the thread has not been stopped, read the next frame
+            self.grabbed,self.frame = self.read()
+
+    
+    def getFrame(self):
+        # Return most recent frame
+        return self.frame
+
+    def stop(self):
+        # Stop thread
+        self.stopped = True
+
 
                 
 class Detector:
@@ -139,7 +168,7 @@ class Detector:
 
         cv.line(InputArray,candidates[0]["centroid"],candidates[1]["centroid"],(0,10,220),2)
 
-        cv.imshow("blobs", closed)
+        #cv.imshow("blobs", closed)
 
         c1 = candidates[0]['centroid']
         c2 = candidates[1]['centroid']
@@ -156,15 +185,16 @@ if __name__ == "__main__":
 
     configs = jsonParse("resources/cv.config.json")
 
-    cap = Camera()
+    cap = Camera(2).start()
     det = Detector(configs[0])
 
     # Wait 1 ms until the "esc" key is pressed (ASCII "esc" = 27)
-    while (cv.waitKey(1) != 27):
-        _, frame = cap.read()
+    while (True):
+        if(cv.waitKey(1) == 27):
+            cap.stop()
+            exit
+            
+        debug,p1,p2 = det.detect(cap.getFrame())
 
-        if _:
+        cv.imshow("Frame", debug)
 
-            debug = det.detect(frame)
-
-            cv.imshow("Frame", debug)
