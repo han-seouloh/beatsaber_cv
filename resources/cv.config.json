@@ -2,8 +2,8 @@
     "detection": [
         {
             "id": "1",
-            "HSVmin": "137,97,77",
-            "HSVmax": "180,227,255",
+            "HSVmin": "160,143,182",
+            "HSVmax": "180,255,255",
             "filters": [
                 {
                     "name": "gaussian",
@@ -13,7 +13,7 @@
                 {
                     "name": "opening",
                     "size": "5",
-                    "iters": "2"
+                    "iters": "1"
                 },
                 {
                     "name": "closing",

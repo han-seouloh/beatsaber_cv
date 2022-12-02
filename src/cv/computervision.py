@@ -122,7 +122,7 @@ class Detector:
                 candidates.append(stats_dict)
 
         if len(candidates) < 2:
-            return InputArray, (0,0), (0,0)
+            return InputArray, None, None
 
         candidates = sorted(candidates, key= lambda d: d["area"], reverse=True)
 
