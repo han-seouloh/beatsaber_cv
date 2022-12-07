@@ -2,7 +2,7 @@ from threading import Thread
 import numpy as np
 import cv2 as cv
 import sys
-
+import mediapipe as mp
 class Camera (cv.VideoCapture):
     """Camera handler class"""
 
@@ -23,7 +23,12 @@ class Camera (cv.VideoCapture):
         self.grabbed, self.frame = self.read()
         
         self.stopped = False
-    
+
+        self.mp_drawing = mp.solutions.drawing_utils
+        self.mp_drawing_styles = mp.solutions.drawing_styles
+        self.mp_pose = mp.solutions.pose
+
+
     def start(self):
         # Start thread to read frame from the video stream
         Thread(target = self.update, args=()).start()
@@ -38,6 +43,15 @@ class Camera (cv.VideoCapture):
         
             # If the thread has not been stopped, read the next frame
             self.grabbed,self.frame = self.read()
+
+            self.frame.flags.writeable = True
+            self.frame = cv.cvtColor(self.frame, cv.COLOR_RGB2BGR)
+            self.mp_drawing.draw_landmarks(
+                self.frame,
+                self.results.pose_landmarks,
+                self.mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
+
 
     
     def getFrame(self):

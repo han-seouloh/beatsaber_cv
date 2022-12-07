@@ -39,27 +39,27 @@ mp_pose = mp.solutions.pose
 def update():
   frame = cap.getFrame()
 
-  frame.flags.writeable = False
-  frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+  #frame.flags.writeable = False
+  #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
 
-  with mp_pose.Pose(
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5) as pose:
+  # with mp_pose.Pose(
+  #   min_detection_confidence=0.5,
+  #   min_tracking_confidence=0.5) as pose:
 
-    results = pose.process(frame)
+  #   results = pose.process(frame)
     
-  # Draw the pose annotation on the image.
-    image.flags.writeable = True
-    image = cv.cvtColor(image, cv.COLOR_RGB2BGR)
-    mp_drawing.draw_landmarks(
-        image,
-        results.pose_landmarks,
-        mp_pose.POSE_CONNECTIONS,
-        landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-    # Flip the image horizontally for a selfie-view display.
-    cv.imshow('MediaPipe Pose', cv.flip(image, 1))
-
-    cv.waitKey(1)
+  # # Draw the pose annotation on the image.
+  #   frame.flags.writeable = True
+  #   frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
+  #   mp_drawing.draw_landmarks(
+  #       frame,
+  #       results.pose_landmarks,
+  #       mp_pose.POSE_CONNECTIONS,
+  #       landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+  #   # Flip the frame horizontally for a selfie-view display.
+  #cv.imshow('MediaPipe Pose', cv.flip(frame, 1))
+  cv.imshow("a",frame)
+  cv.waitKey(1)
   #if pos1 is not None:
   #  mod3d.worldcube.position = map_cv2ur(pos1, frame.shape, 10)
 
