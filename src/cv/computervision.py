@@ -59,6 +59,9 @@ class Camera (cv.VideoCapture):
                     landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
 
 
+            print(self.results)
+
+
     
     def getFrame(self):
         # Return most recent frame
