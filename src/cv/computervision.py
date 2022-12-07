@@ -44,13 +44,19 @@ class Camera (cv.VideoCapture):
             # If the thread has not been stopped, read the next frame
             self.grabbed,self.frame = self.read()
 
-            self.frame.flags.writeable = True
-            self.frame = cv.cvtColor(self.frame, cv.COLOR_RGB2BGR)
-            self.mp_drawing.draw_landmarks(
-                self.frame,
-                self.results.pose_landmarks,
-                self.mp_pose.POSE_CONNECTIONS,
-                landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
+            with self.mp_pose.Pose(
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5) as pose:
+                self.results = pose.process(self.frame)
+
+
+                self.frame.flags.writeable = True
+                self.frame = cv.cvtColor(self.frame, cv.COLOR_RGB2BGR)
+                self.mp_drawing.draw_landmarks(
+                    self.frame,
+                    self.results.pose_landmarks,
+                    self.mp_pose.POSE_CONNECTIONS,
+                    landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
 
 
     
