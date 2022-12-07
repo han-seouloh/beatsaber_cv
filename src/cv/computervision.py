@@ -28,12 +28,14 @@ class Camera (cv.VideoCapture):
         self.mp_drawing_styles = mp.solutions.drawing_styles
         self.mp_pose = mp.solutions.pose
 
+        self.results = 0
+
 
     def start(self):
         # Start thread to read frame from the video stream
         Thread(target = self.update, args=()).start()
         return self
-    
+
     def update(self):
         while True:
             
@@ -50,19 +52,22 @@ class Camera (cv.VideoCapture):
                 self.results = pose.process(self.frame)
 
 
-                self.frame.flags.writeable = True
-                self.frame = cv.cvtColor(self.frame, cv.COLOR_RGB2BGR)
-                self.mp_drawing.draw_landmarks(
-                    self.frame,
-                    self.results.pose_landmarks,
-                    self.mp_pose.POSE_CONNECTIONS,
-                    landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
+                # self.frame.flags.writeable = True
+                # self.frame = cv.cvtColor(self.frame, cv.COLOR_RGB2BGR)
+                # self.mp_drawing.draw_landmarks(
+                #     self.frame,
+                #     self.results.pose_landmarks,
+                #     self.mp_pose.POSE_CONNECTIONS,
+                #     landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
+            print(self.results.pose_landmarks)
 
 
-            print(self.results)
-
-
+    def getPose(self):
+        return self.mp_pose
     
+    def getResults(self):
+        return self.results
+
     def getFrame(self):
         # Return most recent frame
         return self.frame

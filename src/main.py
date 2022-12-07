@@ -3,8 +3,6 @@ from model3d import mod3d
 from cv.computervision import *
 from utils.jsonparser import jsonParse
 
-import mediapipe as mp
-
 args = parser.init_argparser()
 
 configs = jsonParse("resources/cv.config.json")
@@ -23,42 +21,32 @@ def map_cv2ur(cv_centroid, frame_shape, factor = 10):
   return (cx,cy)
 
 
-##########################################################
-
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-mp_pose = mp.solutions.pose
-
-##########################################################
-
-
-
 
 
 # update
 def update():
   frame = cap.getFrame()
 
-  #frame.flags.writeable = False
-  #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+  frame.flags.writeable = False
+  frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+  mp_pose = cap.getPose()
 
-  # with mp_pose.Pose(
-  #   min_detection_confidence=0.5,
-  #   min_tracking_confidence=0.5) as pose:
-
+  results = cap.getResults()
   #   results = pose.process(frame)
-    
-  # # Draw the pose annotation on the image.
-  #   frame.flags.writeable = True
-  #   frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
-  #   mp_drawing.draw_landmarks(
-  #       frame,
-  #       results.pose_landmarks,
-  #       mp_pose.POSE_CONNECTIONS,
-  #       landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-  #   # Flip the frame horizontally for a selfie-view display.
-  #cv.imshow('MediaPipe Pose', cv.flip(frame, 1))
-  cv.imshow("a",frame)
+  if(results == 0): return
+  # Draw the pose annotation on the image.
+  frame.flags.writeable = True
+  frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
+  mp_drawing.draw_landmarks(
+      frame,
+      results.pose_landmarks,
+      mp_pose.POSE_CONNECTIONS,
+      landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+    # Flip the frame horizontally for a selfie-view display.
+
+  cv.imshow("a",cv.flip(frame,1))
   cv.waitKey(1)
   #if pos1 is not None:
   #  mod3d.worldcube.position = map_cv2ur(pos1, frame.shape, 10)
