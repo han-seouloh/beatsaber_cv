@@ -3,80 +3,105 @@ import numpy as np
 import cv2 as cv
 import sys
 import mediapipe as mp
-class Camera (cv.VideoCapture):
+import time
+from queue import Queue
+
+
+class VideoStream:
     """Camera handler class"""
 
     def __init__(self, cam = 0):
         
         # Call the init function of cv.VideoCapture
-        super(Camera, self).__init__(cam)
+        self.capture = cv.VideoCapture(cam)
 
         # Assert that the camera has been opened
-        if not self.isOpened():
-
+        if not self.capture.isOpened():
             try:
                 raise Exception("Camera was not found in the given index")
             except Exception as e:
                 print("Assertion error: ", e)
                 sys.exit(1)
 
-        self.grabbed, self.frame = self.read()
+        # Buffer to store retrieved images
+        self.fifoBuffer = Queue(maxsize=128)
+
+        # Read first frame
+        self.grabbed, frame = self.capture.read()
         
+        # Push the frame into the buffer
+        self.fifoBuffer.put(frame)
+
+        # Thread has been stopped
         self.stopped = False
-
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.mp_drawing_styles = mp.solutions.drawing_styles
-        self.mp_pose = mp.solutions.pose
-
-        self.results = 0
 
 
     def start(self):
         # Start thread to read frame from the video stream
-        Thread(target = self.update, args=()).start()
+
+        t = Thread(target = self.update, args=())
+        t.daemon = True
+        t.start()
+        print("Starting thread...")
         return self
 
     def update(self):
         while True:
-            
-
+            start = time.time()
             if self.stopped:
-                break
+                return
         
-            # If the thread has not been stopped, read the next frame
-            self.grabbed,self.frame = self.read()
+            if not self.fifoBuffer.full():
+                # If the thread has not been stopped, read the next frame
+                self.grabbed,frame = self.capture.read()
 
-            with self.mp_pose.Pose(
-            min_detection_confidence=0.5,
-            min_tracking_confidence=0.5) as pose:
-                self.results = pose.process(self.frame)
-
-
-                # self.frame.flags.writeable = True
-                # self.frame = cv.cvtColor(self.frame, cv.COLOR_RGB2BGR)
-                # self.mp_drawing.draw_landmarks(
-                #     self.frame,
-                #     self.results.pose_landmarks,
-                #     self.mp_pose.POSE_CONNECTIONS,
-                #     landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
-            print(self.results.pose_landmarks)
-
-
-    def getPose(self):
-        return self.mp_pose
-    
-    def getResults(self):
-        return self.results
+                # Queue current frame
+                self.fifoBuffer.put(frame, block=False)
+            end = time.time()
+            print(f"VideoStream FPS [{int(1/(end-start))}]")
+                   
 
     def getFrame(self):
         # Return most recent frame
-        return self.frame
+        try:
+            frame = self.fifoBuffer.get(block=False)
+        except:
+            frame = None
+        
+        return frame
 
     def stop(self):
         # Stop thread
         self.stopped = True
 
+class PoseDetector:
 
+    def __init__(self):
+        self.mp_drawing = mp.solutions.drawing_utils
+        self.mp_drawing_styles = mp.solutions.drawing_styles
+        self.mp_pose = mp.solutions.pose
+
+        self.pose = self.mp_pose.Pose(
+                    model_complexity = 0,
+                    min_detection_confidence=0.5,
+                    min_tracking_confidence=0.5)
+
+    
+    def calculate(self, frame):
+        return self.pose.process(frame)
+
+    def drawPose(self,results,frame):
+        frame.flags.writeable = True
+        frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
+        self.mp_drawing.draw_landmarks(
+            frame,
+            results.pose_landmarks,
+            self.mp_pose.POSE_CONNECTIONS,
+            landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
+        #Flip the frame horizontally for a selfie-view display.
+
+        cv.imshow("Results",cv.flip(frame,1))
+        cv.waitKey(1)
                 
 class Detector:
     """General purpose color based object detection"""
@@ -214,7 +239,7 @@ if __name__ == "__main__":
 
     configs = jsonParse("resources/cv.config.json")
 
-    cap = Camera(0).start()
+    cap = VideoStream(0).start()
     det = Detector(configs[0])
 
     # Wait 1 ms until the "esc" key is pressed (ASCII "esc" = 27)
