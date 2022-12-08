@@ -27,10 +27,10 @@ class VideoStream:
         self.fifoBuffer = Queue(maxsize=128)
 
         # Read first frame
-        self.grabbed, frame = self.capture.read()
+        self.grabbed, self.frame = self.capture.read()
         
         # Push the frame into the buffer
-        self.fifoBuffer.put(frame)
+        #self.fifoBuffer.put(frame)
 
         # Thread has been stopped
         self.stopped = False
@@ -47,28 +47,28 @@ class VideoStream:
 
     def update(self):
         while True:
-            start = time.time()
+            #start = time.time()
             if self.stopped:
                 return
         
             if not self.fifoBuffer.full():
                 # If the thread has not been stopped, read the next frame
-                self.grabbed,frame = self.capture.read()
+                self.grabbed,self.frame = self.capture.read()
 
                 # Queue current frame
-                self.fifoBuffer.put(frame, block=False)
-            end = time.time()
-            print(f"VideoStream FPS [{int(1/(end-start))}]")
+                #self.fifoBuffer.put(frame, block=False)
+            #end = time.time()
+            #print(f"VideoStream f:[{(end-start)}]")
                    
 
     def getFrame(self):
         # Return most recent frame
-        try:
-            frame = self.fifoBuffer.get(block=False)
-        except:
-            frame = None
+        #try:
+        #    frame = self.fifoBuffer.get(block=False)
+        #except:
+        #    frame = None
         
-        return frame
+        return self.frame
 
     def stop(self):
         # Stop thread
@@ -102,6 +102,9 @@ class PoseDetector:
 
         cv.imshow("Results",cv.flip(frame,1))
         cv.waitKey(1)
+
+    def getPose(self):
+        return self.mp_pose
                 
 class Detector:
     """General purpose color based object detection"""

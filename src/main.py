@@ -30,27 +30,27 @@ def map_cv2ur(cv_centroid, factor = 10):
 
 # update
 def update():
-  t1 = time.time()
+  start = time.time()
   frame = cap.getFrame()
   
   if(frame is None): return
 
 
   results = poseDetector.calculate(frame)
-  # poseDetector.drawPose(results,frame)
+  #poseDetector.drawPose(results,frame)
 
-    # lm = results.pose_landmarks
-    # lmPose = mp_pose.PoseLandmark
+  lm = results.pose_landmarks
+  lmPose = poseDetector.getPose().PoseLandmark
 
     # #print(lm.landmark[lmPose.LEFT_WRIST].x)
     # #$print(type(results.pose_landmarks[0].x))
 
-    # #if pos1 is not None:
+    #if pos1 is not None:
 
-    # (cx,cy, cz) = lm.landmark[lmPose.LEFT_WRIST].x, lm.landmark[lmPose.LEFT_WRIST].y, lm.landmark[lmPose.LEFT_WRIST].z
+  (cx,cy, cz) = lm.landmark[lmPose.LEFT_WRIST].x, lm.landmark[lmPose.LEFT_WRIST].y, lm.landmark[lmPose.LEFT_WRIST].z
     # #print(f"x:{cx} y:{cy} z:{cz}")
-    #mod3d.worldcube.position +=  (0.01,0.01,0.01) #map_cv2ur(, frame.shape, 10)
-  print(int(1/(time.time() - t1)))
+  mod3d.worldcube.position = map_cv2ur((cx,cy), 10)
+  print(f"FPS: [{int(1/(time.time() - start))}]")
 
 
 # Input to quit the game
@@ -61,8 +61,8 @@ def input(key):
     quit()
 
 
-mod3d.window.vsync = True
-mod3d.window.show_ursina_splash = True
+mod3d.window.vsync = False
+mod3d.window.show_ursina_splash = False
 mod3d.window.fps_counter.enabled = True
 
 
